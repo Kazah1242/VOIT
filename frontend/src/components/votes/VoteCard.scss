@@ -1,0 +1,56 @@
+.vote-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    margin: 0 0 10px;
+    color: #333;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 15px;
+  }
+
+  &__option {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    label {
+      cursor: pointer;
+    }
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
+      background: #0056b3;
+    }
+  }
+
+  &__success {
+    color: #28a745;
+    text-align: center;
+    font-weight: bold;
+  }
+} 
