@@ -1,31 +1,39 @@
 import axios from 'axios';
-//хуйня
-const API_URL = 'https://gamely-glad-groundhog.cloudpub.ru:443';
+
+// Замените URL на правильный
+const API_URL = 'https://exquisitely-steady-louse.cloudpub.ru/api'; // Добавьте /api в конец
 
 export const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+    baseURL: API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    }
 });
 
-// Добавляем перехватчик для установки токена
+// Добавляем перехватчик для токена
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    console.log('Отправка запроса:', config.url); // Добавим для отладки
+    return config;
 });
 
 // Обработка ошибок
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.reload();
+    response => response,
+    error => {
+        console.error('API Error:', {
+            url: error.config?.url,
+            method: error.config?.method,
+            status: error.response?.status,
+            data: error.response?.data
+        });
+        if (error.response?.status === 401) {
+            localStorage.removeItem('token');
+            window.location.reload();
+        }
+        return Promise.reject(error);
     }
-    return Promise.reject(error);
-  }
 ); 

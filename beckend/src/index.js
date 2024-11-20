@@ -5,12 +5,6 @@ require('dotenv').config();
 const { initDatabase } = require('./config/database');
 const routes = require('./routes');
 
-// Проверка наличия JWT_SECRET
-if (!process.env.JWT_SECRET) {
-    console.error('ОШИБКА: JWT_SECRET не установлен в .env файле');
-    process.exit(1);
-}
-
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -27,31 +21,31 @@ app.use(cors({
 
 app.use(express.json());
 
-// Логгирование запросов
+// Логирование всех запросов
 app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path}`);
+    console.log('Incoming request:', req.method, req.path);
     next();
 });
 
-// Роуты
+// Подключение маршрутов API
 app.use('/api', routes);
 
-// Обработка ошибок
-app.use((err, req, res, next) => {
-    console.error('Ошибка:', err);
-    res.status(500).json({ 
-        message: 'Ошибка сервера',
-        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+// Корневой маршрут
+app.get('/', (req, res) => {
+    res.json({ message: 'Сервер работает' });
+});
+
+// Обработка 404
+app.use((req, res) => {
+    console.log('404 для пути:', req.path);
+    res.status(404).json({ 
+        message: 'Маршрут не найден',
+        path: req.path,
+        method: req.method
     });
 });
 
 app.listen(port, () => {
     console.log(`Сервер запущен на порту ${port}`);
-    console.log('JWT_SECRET установлен:', !!process.env.JWT_SECRET);
-});
-
-console.log('Загруженные переменные окружения:', {
-    PORT: process.env.PORT,
-    JWT_SECRET: process.env.JWT_SECRET,
-    NODE_ENV: process.env.NODE_ENV
+    console.log(`API доступно по адресу: http://localhost:${port}/api`);
 }); 

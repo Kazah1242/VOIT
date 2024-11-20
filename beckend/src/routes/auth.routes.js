@@ -1,8 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { requestAuthCode, verifyCode } = require('../controllers/auth.controller');
+const authController = require('../controllers/auth.controller');
 
-router.post('/request-code', requestAuthCode);
-router.post('/verify-code', verifyCode);
+// Тестовый маршрут
+router.get('/test', (req, res) => {
+    res.json({ message: 'Auth routes работают' });
+});
+
+// Маршруты аутентификации
+router.post('/request-code', authController.requestAuthCode);
+router.post('/verify-code', authController.verifyCode);
 
 module.exports = router; 
