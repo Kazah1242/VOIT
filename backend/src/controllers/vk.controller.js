@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
-const crypto = require('crypto');
 
 const vkCallback = async (req, res) => {
   try {
@@ -52,7 +51,11 @@ const vkCallback = async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    res.json({ token });
+    res.json({ 
+      token,
+      firstName: vkUser.first_name,
+      lastName: vkUser.last_name
+    });
   } catch (error) {
     console.error('VK Callback Error:', error);
     res.status(500).json({ 

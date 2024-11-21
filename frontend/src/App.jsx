@@ -50,9 +50,10 @@ function App() {
 
           const data = await res.json();
           localStorage.setItem('token', data.token);
-          if (data.userName) {
-            localStorage.setItem('userName', data.userName);
-            setUserInfo(prev => ({ ...prev, name: data.userName }));
+          if (data.firstName && data.lastName) {
+            const fullName = `${data.firstName} ${data.lastName}`;
+            localStorage.setItem('userName', fullName);
+            setUserInfo(prev => ({ ...prev, name: fullName }));
           }
           setIsAuthenticated(true);
         }
