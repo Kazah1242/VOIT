@@ -13,13 +13,26 @@ initDatabase();
 
 // Middleware
 app.use(cors({
-    origin: '*',
+    origin: [
+        'http://localhost:5173',
+        'https://gamely-glad-groundhog.cloudpub.ru'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Length', 'X-Requested-With']
 }));
 
 app.use(express.json());
+
+app.use((req, res, next) => {
+    if (req.path.includes('/api/auth/vk-callback')) {
+        console.log('VK Callback Headers:', req.headers);
+        console.log('VK Callback Body:', req.body);
+        console.log('VK Callback Query:', req.query);
+    }
+    next();
+});
 
 // Логирование всех запросов
 app.use((req, res, next) => {
@@ -42,6 +55,15 @@ app.use((req, res) => {
         message: 'Маршрут не найден',
         path: req.path,
         method: req.method
+    });
+});
+
+// Добавьте логирование ошибок
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).json({ 
+        message: 'Внутренняя ошибка сервера',
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
 });
 

@@ -11,7 +11,9 @@ const initDatabase = async () => {
   try {
     await sequelize.authenticate();
     console.log('Подключение к SQLite успешно установлено');
-    await sequelize.sync({ alter: true });
+    
+    // Изменяем force на true только один раз, чтобы пересоздать таблицы
+    await sequelize.sync({ force: true }); // !!! После первого запуска измените на { alter: true }
     console.log('Модели синхронизированы с базой данных');
   } catch (error) {
     console.error('Ошибка подключения к базе данных:', error.message);

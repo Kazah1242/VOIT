@@ -9,8 +9,20 @@ const User = sequelize.define('User', {
   },
   email: {
     type: DataTypes.STRING,
+    allowNull: true,
     unique: true,
-    allowNull: false
+    validate: {
+      isEmail: true
+    }
+  },
+  vkId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: true
   },
   isVerified: {
     type: DataTypes.BOOLEAN,
