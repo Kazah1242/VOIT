@@ -14,7 +14,8 @@ const initDatabase = async () => {
     await sequelize.sync({ alter: true });
     console.log('Модели синхронизированы с базой данных');
   } catch (error) {
-    console.error('Ошибка подключения к базе данных:', error);
+    console.error('Ошибка подключения к базе данных:', error.message);
+    throw new Error(`Ошибка инициализации базы данных: ${error.message}`);
   }
 };
 
