@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Op } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 const User = sequelize.define('User', {
@@ -37,5 +37,13 @@ const User = sequelize.define('User', {
     allowNull: true
   }
 });
+
+// Добавляем статический метод для проверки регистрации
+User.isRegistered = async function(email) {
+  const user = await this.findOne({
+    where: { email }
+  });
+  return !!user;
+};
 
 module.exports = User; 

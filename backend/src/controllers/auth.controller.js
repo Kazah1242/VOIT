@@ -4,11 +4,28 @@ const { sendVerificationCode } = require('../services/email.service');
 
 const requestAuthCode = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email, isRegistration } = req.body;
         console.log('Получен запрос на код для email:', email);
 
         if (!email) {
             return res.status(400).json({ message: 'Email обязателен' });
+        }
+
+        // Проверяем статус регистрации
+        const isRegistered = await User.isRegistered(email);
+        
+        if (isRegistration && isRegistered) {
+            return res.status(400).json({ 
+                message: 'Пользователь уже зарегистрирован. Пожалуйста, войдите.',
+                shouldLogin: true 
+            });
+        }
+        
+        if (!isRegistration && !isRegistered) {
+            return res.status(400).json({ 
+                message: 'Пользователь не зарегистрирован. Пожалуйста, зарегистрируйтесь.',
+                shouldRegister: true 
+            });
         }
 
         // Генерация кода

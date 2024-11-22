@@ -45,6 +45,14 @@ const vkCallback = async (req, res) => {
       }
     });
 
+    // Добавляем обновление существующего пользователя
+    if (!created) {
+      await user.update({
+        name: `${vkUser.first_name} ${vkUser.last_name}`,
+        isVerified: true
+      });
+    }
+
     const token = jwt.sign(
       { userId: user.id },
       process.env.JWT_SECRET,
